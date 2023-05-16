@@ -15,13 +15,13 @@ public class AttackCounterUi : MonoBehaviour
     void Start()
     {
         UpdateTexts();
-        ThirdPersonController.OnPunchUsed += AddPunchCounter;
-        ThirdPersonController.OnKickUsed += AddKickCounter;
+        PlayerAttack.OnPunchUsed += AddPunchCounter;
+        PlayerAttack.OnKickUsed += AddKickCounter;
     }
     private void OnDisable()
     {
-        ThirdPersonController.OnPunchUsed -= AddPunchCounter;
-        ThirdPersonController.OnKickUsed -= AddKickCounter;
+        PlayerAttack.OnPunchUsed -= AddPunchCounter;
+        PlayerAttack.OnKickUsed -= AddKickCounter;
     }
    
     void AddPunchCounter()

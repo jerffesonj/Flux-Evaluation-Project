@@ -1,10 +1,7 @@
-using Codice.Client.Common;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using UnityEditor;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class CharacterColorCreation : EditorWindow
@@ -26,14 +23,15 @@ public class CharacterColorCreation : EditorWindow
     {
         characterColor = FindObjectOfType<CharacterColor>();
 
-        GUIStyle styles = new GUIStyle();
-        styles.alignment = TextAnchor.MiddleCenter;
-        styles.fontSize = 18;
-        styles.normal.textColor = Color.white;
+        GUIStyle header = new GUIStyle();
+        header.alignment = TextAnchor.MiddleCenter;
+        header.fontSize = 18;
+        header.normal.textColor = Color.white;
 
         GUILayout.Space(10);
 
-        GUILayout.Label("Select the player color", styles);
+        GUILayout.Label("Select the player color", header);
+
         GUILayout.Space(20);
 
         body = EditorGUILayout.ColorField("Body Color", body);
@@ -42,9 +40,8 @@ public class CharacterColorCreation : EditorWindow
 
         GUILayout.Space(15);
 
-        if (GUILayout.Button("Create Scriptable Color"))
+        if (GUILayout.Button("Create new Character Color"))
         {
-            Debug.Log("Click");
             CreateMyAsset();
         }
     }
@@ -54,20 +51,19 @@ public class CharacterColorCreation : EditorWindow
         ColorScriptable asset = CreateInstance<ColorScriptable>();
 
         AssetDatabase.CreateAsset(asset, "Assets/Character Color Scriptables/Character Color (" + GetNumberOfAssetsOnFolder() + ").asset");
-        
+
         AssetDatabase.SaveAssets();
 
         EditorUtility.FocusProjectWindow();
 
         Selection.activeObject = asset;
-        asset.SetColors(body,arms,legs);
+        asset.SetColors(body, arms, legs);
         characterColor.colors.Add(asset);
         EditorUtility.SetDirty(asset);
     }
 
     static int GetNumberOfAssetsOnFolder()
     {
-        //string[] objs = AssetDatabase.FindAssets("Assets/Character Color Scriptables/");
         string[] objs = Directory.GetFiles("Assets/Character Color Scriptables/");
         int num = 0;
         foreach (string obj in objs)
@@ -81,4 +77,3 @@ public class CharacterColorCreation : EditorWindow
         return num + 1;
     }
 }
-

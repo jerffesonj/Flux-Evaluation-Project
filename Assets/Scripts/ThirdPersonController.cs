@@ -89,6 +89,7 @@ namespace StarterAssets
 		private int _animIDMotionSpeed;
 
 		private PlayerInput _playerInput;
+		private PlayerAttack _playerAttack;
 		private Animator _animator;
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
@@ -96,17 +97,13 @@ namespace StarterAssets
 
 		private const float _threshold = 0.01f;
 
-		private bool _hasAnimator;
-		private static readonly int Punch = Animator.StringToHash("Punch");
-		private static readonly int Kick = Animator.StringToHash("Kick");
-
-        public delegate void OnAttack();
-        public static event OnAttack OnPunchUsed;
-        public static event OnAttack OnKickUsed;
-
+        private bool removingJumpExtraCounter = false;
+        private bool _hasAnimator;
+		
         private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
-		private void Awake()
+
+        private void Awake()
 		{
 			// get a reference to our main camera
 			if (_mainCamera == null)
@@ -121,8 +118,9 @@ namespace StarterAssets
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
 			_playerInput = GetComponent<PlayerInput>();
+			_playerAttack = GetComponent<PlayerAttack>();
 
-			AssignAnimationIDs();
+            AssignAnimationIDs();
 
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
@@ -136,40 +134,7 @@ namespace StarterAssets
             JumpAndGravity();
 			GroundedCheck();
 			Move();
-			Attack();
 		}
-
-		bool IsPlayingAttackAnimation()
-		{
-			if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Kick"))
-				return true;
-			return false;
-        }
-
-        private void Attack()
-		{
-			if (!Grounded || IsPlayingAttackAnimation())
-			{
-				_input.buttonX = false;
-				_input.buttonY = false;
-
-				return;
-			}
-
-			if (_input.buttonX)
-			{
-				_input.buttonX = false;
-				_animator.SetTrigger(Punch);
-				OnPunchUsed?.Invoke();
-            }
-			if (_input.buttonY)
-			{
-                _input.buttonY = false;
-				_animator.SetTrigger(Kick);
-                OnKickUsed?.Invoke();
-
-            }
-        }
 
 		private void LateUpdate()
 		{
@@ -279,21 +244,20 @@ namespace StarterAssets
 			}
 		}
 
-		bool removingExtraCounter = false; 
         IEnumerator JumpCounter()
         {
-			if (removingExtraCounter)
+			if (removingJumpExtraCounter)
 				yield break;
-			removingExtraCounter = true;
+			removingJumpExtraCounter = true;
             yield return new WaitForSeconds(0.1f);
             _extraJumpsCounter--;
-            removingExtraCounter = false;
+            removingJumpExtraCounter = false;
 
         }
 
         private void JumpAndGravity()
 		{
-			if (IsPlayingAttackAnimation())
+			if (_playerAttack.IsPlayingAttackAnimation())
 			{
 				_input.jump = false;
 				return;
