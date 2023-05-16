@@ -1,0 +1,46 @@
+ManifestFileVersion: 0
+CRC: 1095318151
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 797b2f5fe7a519671557cd0a731d58aa
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 362b69a0f87ecd44ef3e22811da381ae
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Environment/Environment_Prefab.prefab
+- Assets/Environment/Prefabs/Box_350x250x300_Prefab.prefab
+- Assets/Environment/Prefabs/Box_350x250x200_Prefab.prefab
+- Assets/Environment/Prefabs/Box_100x100x100_Prefab.prefab
+- Assets/Environment/Prefabs/Structure_Prefab.prefab
+- Assets/Environment/Prefabs/Ramp_Prefab.prefab
+- Assets/Environment/Prefabs/Wall_Prefab.prefab
+- Assets/Environment/Prefabs/Tunnel_Prefab.prefab
+- Assets/Environment/Prefabs/Stairs_650_400_300_Prefab.prefab
+- Assets/Environment/Prefabs/Stairs_200x100x200_Prefab.prefab
+Dependencies: []
