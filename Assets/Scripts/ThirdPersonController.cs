@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
@@ -37,8 +38,11 @@ namespace StarterAssets
 		public float JumpTimeout = 0.50f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
-        
-		[Header("Player Grounded")]
+
+        [Tooltip("Number of jumps the character can do")]
+        public int extraJumps = 1;
+
+        [Header("Player Grounded")]
 		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
 		public bool Grounded = true;
 		[Tooltip("Useful for rough ground")]
@@ -71,9 +75,10 @@ namespace StarterAssets
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
+        private int _extraJumpsCounter = 1;
 
-		// timeout deltatime
-		private float _jumpTimeoutDelta;
+        // timeout deltatime
+        private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
 		// animation IDs
@@ -127,8 +132,8 @@ namespace StarterAssets
 		private void Update()
 		{
 			_hasAnimator = TryGetComponent(out _animator);
-			
-			JumpAndGravity();
+
+            JumpAndGravity();
 			GroundedCheck();
 			Move();
 			Attack();
@@ -274,7 +279,19 @@ namespace StarterAssets
 			}
 		}
 
-		private void JumpAndGravity()
+		bool removingExtraCounter = false; 
+        IEnumerator JumpCounter()
+        {
+			if (removingExtraCounter)
+				yield break;
+			removingExtraCounter = true;
+            yield return new WaitForSeconds(0.1f);
+            _extraJumpsCounter--;
+            removingExtraCounter = false;
+
+        }
+
+        private void JumpAndGravity()
 		{
 			if (IsPlayingAttackAnimation())
 			{
@@ -283,6 +300,7 @@ namespace StarterAssets
 			}
 			if (Grounded)
 			{
+				_extraJumpsCounter = extraJumps;
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 
@@ -302,43 +320,63 @@ namespace StarterAssets
 				// Jump
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
+                    _input.jump = false;
+                    StartCoroutine(JumpCounter());
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-					// update animator if using character
-					if (_hasAnimator)
+                    // update animator if using character
+                    if (_hasAnimator)
 					{
 						_animator.SetBool(_animIDJump, true);
 					}
-				}
 
-				// jump timeout
-				if (_jumpTimeoutDelta >= 0.0f)
+                }
+
+                // jump timeout
+                if (_jumpTimeoutDelta >= 0.0f)
 				{
 					_jumpTimeoutDelta -= Time.deltaTime;
 				}
 			}
 			else
 			{
-				// reset the jump timeout timer
-				_jumpTimeoutDelta = JumpTimeout;
-
-				// fall timeout
-				if (_fallTimeoutDelta >= 0.0f)
+				if (_extraJumpsCounter > 0)
 				{
-					_fallTimeoutDelta -= Time.deltaTime;
-				}
+                    if (_input.jump && _jumpTimeoutDelta < 0f)
+                    {
+                        _input.jump = false;
+						StartCoroutine(JumpCounter());
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -3f * Gravity);
+                        if (_hasAnimator)
+                        {
+                            _animator.SetBool(_animIDJump, true);
+                        }
+                    }
+                }
 				else
 				{
-					// update animator if using character
-					if (_hasAnimator)
-					{
-						_animator.SetBool(_animIDFreeFall, true);
-					}
-				}
 
-				// if we are not grounded, do not jump
-				_input.jump = false;
+					// reset the jump timeout timer
+					_jumpTimeoutDelta = JumpTimeout;
+
+					// fall timeout
+					if (_fallTimeoutDelta >= 0.0f)
+					{
+						_fallTimeoutDelta -= Time.deltaTime;
+					}
+					else
+					{
+						// update animator if using character
+						if (_hasAnimator)
+						{
+							_animator.SetBool(_animIDFreeFall, true);
+						}
+					}
+
+					// if we are not grounded, do not jump
+					_input.jump = false;
+				}
 			}
 
 			
