@@ -14,8 +14,8 @@ namespace StarterAssets
         public bool jump;
         public bool sprint;
         public bool buttonX;
-        private bool _buttonY;
-        private bool Q, E;
+        public bool _buttonY;
+        public bool Q, E;
 
         public bool buttonY
         {
@@ -33,8 +33,8 @@ namespace StarterAssets
 #if !UNITY_IOS || !UNITY_ANDROID
         [Header("Mouse Cursor Settings")] public bool cursorLocked = true;
         public bool cursorInputForLook = true;
-#endif
         private Gamepad _gamepad;
+#endif
 
         private void Awake()
         {
@@ -43,17 +43,11 @@ namespace StarterAssets
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Q) && !Q)
-                Q = true;
-            if (Input.GetKeyUp(KeyCode.Q) && Q)
-                Q = false;
-            if (Input.GetKeyDown(KeyCode.E) && !E)
-                E = true;
-            if (Input.GetKeyUp(KeyCode.E) && E)
-                E = false;
-                
-            buttonX = _gamepad.buttonWest.isPressed || Q;
-            buttonY = _gamepad.buttonNorth.isPressed || E;
+            if (_gamepad != null)
+            {
+                buttonX = _gamepad.buttonWest.isPressed;
+                buttonY = _gamepad.buttonNorth.isPressed;
+            }
         }
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         public void OnMove(InputValue value)
@@ -78,8 +72,27 @@ namespace StarterAssets
         {
             SprintInput(value.isPressed);
         }
+        public void OnAttack1(InputValue value)
+        {
+            Attack1Input(value.isPressed);
+        }
+        public void OnAttack2(InputValue value)
+        {
+            Attack2Input(value.isPressed);
+        }
 #else
 	// old input sys if we do decide to have it (most likely wont)...
+    public void AttackOldInput()
+    {
+            if (Input.GetKeyDown(KeyCode.Q) && !Q)
+                Q = true;
+            if (Input.GetKeyUp(KeyCode.Q) && Q)
+                Q = false;
+            if (Input.GetKeyDown(KeyCode.E) && !E)
+                E = true;
+            if (Input.GetKeyUp(KeyCode.E) && E)
+                E = false;
+    }
 #endif
 
 
@@ -102,8 +115,16 @@ namespace StarterAssets
         {
             sprint = newSprintState;
         }
+        public void Attack1Input(bool newAttackState)
+        {
+            buttonX = newAttackState;
+        }
+        public void Attack2Input(bool newAttackState)
+        {
+            buttonY = newAttackState;
+        }
 
-#if !UNITY_IOS || !UNITY_ANDROID
+#if !UNITY_EDITOR
 
         private void OnApplicationFocus(bool hasFocus)
         {
@@ -112,7 +133,7 @@ namespace StarterAssets
 
         private void SetCursorState(bool newState)
         {
-            Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+           Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
         }
 
 #endif

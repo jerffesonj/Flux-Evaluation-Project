@@ -36,7 +36,7 @@ namespace StarterAssets
 		public float JumpTimeout = 0.50f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
-
+        
 		[Header("Player Grounded")]
 		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
 		public bool Grounded = true;
@@ -129,13 +129,37 @@ namespace StarterAssets
 			Attack();
 		}
 
-		private void Attack()
+		bool IsPlayingAttackAnimation()
 		{
-			if(_input.buttonX)
+			if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Kick"))
+				return true;
+			return false;
+        }
+
+        private void Attack()
+		{
+			if (!Grounded || IsPlayingAttackAnimation())
+			{
+				_input.buttonX = false;
+				_input.buttonY = false;
+
+				return;
+			}
+
+			if (_input.buttonX)
+			{
+				_input.buttonX = false;
 				_animator.SetTrigger(Punch);
-			if(_input.buttonY)
+				print("punch");
+            }
+			if (_input.buttonY)
+			{
+                _input.buttonY = false;
 				_animator.SetTrigger(Kick);
-		}
+                print("kick");
+
+            }
+        }
 
 		private void LateUpdate()
 		{
@@ -247,6 +271,11 @@ namespace StarterAssets
 
 		private void JumpAndGravity()
 		{
+			if (IsPlayingAttackAnimation())
+			{
+				_input.jump = false;
+				return;
+			}
 			if (Grounded)
 			{
 				// reset the fall timeout timer
