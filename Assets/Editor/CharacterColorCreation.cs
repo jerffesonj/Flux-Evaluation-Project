@@ -6,13 +6,14 @@ using UnityEngine;
 
 public class CharacterColorCreation : EditorWindow
 {
-    public static CharacterColor characterColor;
+    public Color body = Color.white;
+    public Color arms = Color.white;
+    public Color legs = Color.white;
 
-    public static Color body = Color.white;
-    public static Color arms = Color.white;
-    public static Color legs = Color.white;
+    private static string scriptablePath = "Assets/Character Color Scriptables/";
+    private CharacterColor characterColor;
 
-    [MenuItem("Window/Character Color Creation")]
+    [MenuItem("Character Color/Character Color Creation")]
     public static void ShowWindow()
     {
         //Show existing window instance. If one doesn't exist, make one.
@@ -23,10 +24,7 @@ public class CharacterColorCreation : EditorWindow
     {
         characterColor = FindObjectOfType<CharacterColor>();
 
-        GUIStyle header = new GUIStyle();
-        header.alignment = TextAnchor.MiddleCenter;
-        header.fontSize = 18;
-        header.normal.textColor = Color.white;
+        GUIStyle header = HeaderStyle();
 
         GUILayout.Space(10);
 
@@ -46,23 +44,38 @@ public class CharacterColorCreation : EditorWindow
         }
     }
 
-    public static void CreateMyAsset()
+    private GUIStyle HeaderStyle()
+    {
+        GUIStyle header = new GUIStyle();
+        header.alignment = TextAnchor.MiddleCenter;
+        header.fontSize = 18;
+        header.normal.textColor = Color.white;
+        return header;
+    }
+
+    private void CreateMyAsset()
     {
         ColorScriptable asset = CreateInstance<ColorScriptable>();
 
-        AssetDatabase.CreateAsset(asset, "Assets/Character Color Scriptables/Character Color (" + GetNumberOfAssetsOnFolder() + ").asset");
+        string assetName = Path.Combine("Character Color (", GetNumberOfAssetsOnFolder().ToString(), ")");
+        string assetFileType = ".asset";
+
+        AssetDatabase.CreateAsset(asset, Path.Combine(scriptablePath, assetName, assetFileType));
+
+        //Updates the colors selected to the scriptable created
+        asset.SetColors(body, arms, legs);
+
+        //Automatically adds to the characters colors list
+        characterColor.colors.Add(asset);
 
         AssetDatabase.SaveAssets();
 
         EditorUtility.FocusProjectWindow();
 
         Selection.activeObject = asset;
-        asset.SetColors(body, arms, legs);
-        characterColor.colors.Add(asset);
-        EditorUtility.SetDirty(asset);
     }
 
-    static int GetNumberOfAssetsOnFolder()
+    int GetNumberOfAssetsOnFolder()
     {
         string[] objs = Directory.GetFiles("Assets/Character Color Scriptables/");
         int num = 0;
