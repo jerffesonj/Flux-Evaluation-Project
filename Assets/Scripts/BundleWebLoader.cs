@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class BundleWebLoader : MonoBehaviour
 {
     public string bundleUrl = "";
-    public string assetName = "BundledObject";
+    public string assetName = "assets/environment/Environment_Prefab.prefab";
 
     private void Awake()
     {
@@ -44,7 +44,7 @@ public class BundleWebLoader : MonoBehaviour
 
             //}
 
-            var loadAsset = bundle.LoadAsset<GameObject>("assets/environment/Environment_Prefab.prefab");
+            var loadAsset = bundle.LoadAsset<GameObject>(assetName);
                 Instantiate(loadAsset);
         }
     }

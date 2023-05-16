@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
@@ -94,7 +95,11 @@ namespace StarterAssets
 		private static readonly int Punch = Animator.StringToHash("Punch");
 		private static readonly int Kick = Animator.StringToHash("Kick");
 
-		private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
+        public delegate void OnAttack();
+        public static event OnAttack OnPunchUsed;
+        public static event OnAttack OnKickUsed;
+
+        private bool IsCurrentDeviceMouse => _playerInput.currentControlScheme == "KeyboardMouse";
 
 		private void Awake()
 		{
@@ -150,13 +155,13 @@ namespace StarterAssets
 			{
 				_input.buttonX = false;
 				_animator.SetTrigger(Punch);
-				print("punch");
+				OnPunchUsed?.Invoke();
             }
 			if (_input.buttonY)
 			{
                 _input.buttonY = false;
 				_animator.SetTrigger(Kick);
-                print("kick");
+                OnKickUsed?.Invoke();
 
             }
         }
