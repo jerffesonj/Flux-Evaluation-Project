@@ -12,7 +12,8 @@ public class CharacterColor : MonoBehaviour
     {
         int randomIndex = Random.Range(0,colors.Count);
 
-        ChangePlayerMaterialsColor(colors[randomIndex].bodyColor, colors[randomIndex].armsColor, colors[randomIndex].legsColor);
+        ColorScriptable currentColor = colors[randomIndex];
+        ChangePlayerMaterialsColor(currentColor.bodyColor, currentColor.armsColor, currentColor.legsColor);
     }
 
     private void OnDisable()

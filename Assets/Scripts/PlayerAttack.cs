@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     public GameObject attackTrigger;
-    public int attackIndex;
+    private int attackIndex;
 
     private Animator _animator;
     private bool _hasAnimator;
@@ -15,6 +15,8 @@ public class PlayerAttack : MonoBehaviour
 
     private static readonly int Punch = Animator.StringToHash("Punch");
     private static readonly int Kick = Animator.StringToHash("Kick");
+
+    public int AttackIndex { get => attackIndex; }
 
     public delegate void OnAttack();
     public static event OnAttack OnPunchUsed;

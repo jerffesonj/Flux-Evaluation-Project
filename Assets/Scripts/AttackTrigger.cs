@@ -17,7 +17,7 @@ public class AttackTrigger : MonoBehaviour
         DummyScript dummy = other.GetComponent<DummyScript>();
         if (dummy)
         {
-            switch (playerAttack.attackIndex)
+            switch (playerAttack.AttackIndex)
             {
                 case 0:
                     dummy.SmallHit();

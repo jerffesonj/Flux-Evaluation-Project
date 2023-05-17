@@ -9,7 +9,6 @@ public class ColorScriptable : ScriptableObject
     public Color armsColor;
     public Color legsColor;
 
-
     public void SetColors(Color body, Color arms, Color legs)
     {
         bodyColor = body;
