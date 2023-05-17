@@ -8,26 +8,22 @@ public class CharacterColor : MonoBehaviour
 
     public Material[] playerMaterials;
 
-    // Start is called before the first frame update
     void Start()
     {
         int randomIndex = Random.Range(0,colors.Count);
 
-        playerMaterials[0].color = colors[randomIndex].bodyColor;
-        playerMaterials[1].color = colors[randomIndex].armsColor;
-        playerMaterials[2].color = colors[randomIndex].legsColor;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        ChangePlayerMaterialsColor(colors[randomIndex].bodyColor, colors[randomIndex].armsColor, colors[randomIndex].legsColor);
     }
 
     private void OnDisable()
     {
-        playerMaterials[0].color = Color.white;
-        playerMaterials[1].color = Color.white;
-        playerMaterials[2].color = Color.white;
+        ChangePlayerMaterialsColor(Color.white, Color.white, Color.white);
+    }
+
+    void ChangePlayerMaterialsColor(Color bodyColor, Color armsColor, Color legsColor)
+    {
+        playerMaterials[0].color = bodyColor;
+        playerMaterials[1].color = armsColor;
+        playerMaterials[2].color = legsColor;
     }
 }

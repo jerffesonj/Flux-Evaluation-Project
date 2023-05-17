@@ -20,8 +20,6 @@ public class PlayerAttack : MonoBehaviour
     public static event OnAttack OnPunchUsed;
     public static event OnAttack OnKickUsed;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         _hasAnimator = TryGetComponent(out _animator);
@@ -68,7 +66,6 @@ public class PlayerAttack : MonoBehaviour
             OnKickUsed?.Invoke();
             StartCoroutine(ActivateAttackTrigger());
             attackIndex = 1;
-
         }
     }
 

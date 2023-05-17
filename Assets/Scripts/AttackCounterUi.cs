@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class AttackCounterUi : MonoBehaviour
 {
-    int punchCounter;
-    int kickCounter;
+    private int punchCounter;
+    private int kickCounter;
 
     public TMP_Text punchCounterText;
     public TMP_Text kickCounterText;

@@ -244,6 +244,7 @@ namespace StarterAssets
 			}
 		}
 
+		//Wait before removing the jump counter
         IEnumerator JumpCounter()
         {
 			if (removingJumpExtraCounter)
@@ -305,6 +306,7 @@ namespace StarterAssets
 			}
 			else
 			{
+				//double jump
 				if (_extraJumpsCounter > 0)
 				{
                     if (_input.jump && _jumpTimeoutDelta < 0f)
@@ -320,7 +322,6 @@ namespace StarterAssets
                 }
 				else
 				{
-
 					// reset the jump timeout timer
 					_jumpTimeoutDelta = JumpTimeout;
 

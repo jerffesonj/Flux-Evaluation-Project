@@ -57,10 +57,9 @@ public class CharacterColorCreation : EditorWindow
     {
         ColorScriptable asset = CreateInstance<ColorScriptable>();
 
-        string assetName = Path.Combine("Character Color (", GetNumberOfAssetsOnFolder().ToString(), ")");
-        string assetFileType = ".asset";
+        string assetName = Path.Combine("Character Color (" + GetNumberOfAssetsOnFolder().ToString() + ")" + ".asset");
 
-        AssetDatabase.CreateAsset(asset, Path.Combine(scriptablePath, assetName, assetFileType));
+        AssetDatabase.CreateAsset(asset, Path.Combine(scriptablePath, assetName));
 
         //Updates the colors selected to the scriptable created
         asset.SetColors(body, arms, legs);
