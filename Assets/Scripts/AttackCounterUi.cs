@@ -8,10 +8,10 @@ public class AttackCounterUi : MonoBehaviour
 {
     private int punchCounter;
     private int kickCounter;
-
-    public TMP_Text punchCounterText;
-    public TMP_Text kickCounterText;
-    // Start is called before the first frame update
+    private int totalHitCounter;
+    
+    public TMP_Text hitCounterText;
+    
     void Start()
     {
         UpdateTexts();
@@ -38,7 +38,16 @@ public class AttackCounterUi : MonoBehaviour
     }
     void UpdateTexts()
     {
-        punchCounterText.text = punchCounter.ToString();
-        kickCounterText.text = kickCounter.ToString();
+        totalHitCounter = punchCounter + kickCounter;
+
+        hitCounterText.text = totalHitCounter + " Hits";
+        hitCounterText.transform.parent.gameObject.SetActive(true);
+        StartCoroutine(TurnOffHitCounter());
+    }
+
+    IEnumerator TurnOffHitCounter()
+    {
+        yield return new WaitForSeconds(0.7f);
+        hitCounterText.transform.parent.gameObject.SetActive(false);
     }
 }

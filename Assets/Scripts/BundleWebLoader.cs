@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -25,6 +26,7 @@ public class BundleWebLoader : MonoBehaviour
         }
 
         UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(bundleUrl);
+
         yield return www.SendWebRequest();
 
         if (www.result != UnityWebRequest.Result.Success)
