@@ -6,7 +6,7 @@ Flux Evaluation Project
 Game Link
 </h2>
 
-[Download Here](<a>https://jerffesonj.itch.io/flux-evaluation-test</a>)
+<p><a href="https://jerffesonj.itch.io/flux-evaluation-test" target="_blank">Download Here </a></p>
 
 <h2 style="font-size: 2px;">
 Main task
